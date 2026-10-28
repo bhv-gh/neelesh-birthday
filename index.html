@@ -192,9 +192,9 @@
       if(skip||motion.matches){showReceipt(!skip);return;}
       const stage=$('#handoff');stage.classList.remove('play');void stage.offsetWidth;stage.classList.add('play');after(()=>{$('#handoff-status').textContent='From Harsha, with love.';},1900);after(()=>showReceipt(true),3900);
     }
-    function closeGift(){cancelTimers();dialog.close();}
+    function closeGift(){cancelTimers();document.body.style.overflow='';dialog.close();}
     dialog.addEventListener('close',()=>{cancelTimers();document.body.style.overflow='';$('#handoff').classList.remove('play');$('#confetti').replaceChildren();if(lastTrigger&&lastTrigger.isConnected)lastTrigger.focus({preventScroll:true});});
-    dialog.addEventListener('cancel',cancelTimers);
+    dialog.addEventListener('cancel',event=>{event.preventDefault();closeGift();});
     $$('.choose').forEach(button=>button.addEventListener('click',()=>openGift(button.dataset.choose)));
     $('#close-reveal').addEventListener('click',closeGift);
     $('#choose-again').addEventListener('click',()=>{closeGift();$('#choose').scrollIntoView({behavior:motion.matches?'instant':'smooth'});});
