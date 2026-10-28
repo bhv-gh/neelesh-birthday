@@ -4,7 +4,6 @@ import datetime as dt
 import json
 import math
 import re
-import time
 import urllib.request
 from pathlib import Path
 

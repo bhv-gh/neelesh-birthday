@@ -42,6 +42,24 @@ jobs:
           PY
       - name: Refresh public market quotes
         run: python3 scripts/fetch_quotes.py
+      - name: Install browser verification tools
+        if: github.event_name != 'schedule'
+        run: |
+          npm install --prefix /tmp/birthday-browser playwright
+          /tmp/birthday-browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify phone layouts and gift flows
+        if: github.event_name != 'schedule'
+        env:
+          NODE_PATH: /tmp/birthday-browser/node_modules
+        run: |
+          python3 -m http.server 8080 --bind 127.0.0.1 >/tmp/birthday-server.log 2>&1 &
+          node scripts/verify.cjs
+      - name: Save browser screenshots
+        if: always() && github.event_name != 'schedule'
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-verification
+          path: browser-results/
       - uses: actions/configure-pages@v5
       - name: Package site
         run: |
